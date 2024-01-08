@@ -117,7 +117,7 @@ export class PlaidIntegration {
 
             app.post('/create_link_token', async (req, res) => {
                 const clientUserId = this.user.client_user_id
-                const country_codes = process.env.COUNTRY_CODES ? process.env.COUNTRY_CODES.split(',') : ['US']
+                const country_codes = process.env.COUNTRY_CODES ? process.env.COUNTRY_CODES.split(',') : ['GB']
                 const language = process.env.LANGUAGE ? process.env.LANGUAGE : 'en'
                 const options: CreateLinkTokenOptions = {
                     user: {
@@ -234,7 +234,7 @@ export class PlaidIntegration {
                     accountId: transaction.account_id,
                     transactionId: transaction.transaction_id,
                     pendingtransactionId: transaction.pending_transaction_id,
-                    category: transaction.category.join(' - '),
+                    category: (transaction.category || []).join(' - '),
                     address: transaction.location.address,
                     city: transaction.location.city,
                     state: transaction.location.region,
