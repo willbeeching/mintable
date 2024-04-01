@@ -48,6 +48,9 @@
     "devDependencies": {
         "prettier": "^1.16.4"
     },
+    "overrides": {
+        "@types/mime": "3.0.4"
+    },
     "description": "Automate your personal finances – for free, with no ads, and no data collection.",
     "repository": {
         "type": "git",
