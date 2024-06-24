@@ -25,8 +25,8 @@ export class PlaidIntegration {
         this.plaidConfig = this.config.integrations[IntegrationId.Plaid] as PlaidConfig
 
         this.environment =
-            this.plaidConfig.environment === PlaidEnvironmentType.Development
-                ? plaid.environments.development
+            this.plaidConfig.environment === PlaidEnvironmentType.Production
+                ? plaid.environments.production
                 : plaid.environments.sandbox
 
         this.client = new plaid.Client({
@@ -116,30 +116,37 @@ export class PlaidIntegration {
             })
 
             app.post('/create_link_token', async (req, res) => {
-                const clientUserId = this.user.client_user_id
-                const country_codes = process.env.COUNTRY_CODES ? process.env.COUNTRY_CODES.split(',') : ['GB']
-                const language = process.env.LANGUAGE ? process.env.LANGUAGE : 'en'
+                const clientUserId = this.user.client_user_id;
+                const country_codes = ['GB', 'US']; // Ensure this is an array and a supported country code
+                const language = process.env.LANGUAGE || 'en';
+
+                // Define the options object with all required fields
                 const options: CreateLinkTokenOptions = {
                     user: {
                         client_user_id: clientUserId
                     },
                     client_name: 'Mintable',
                     products: ['transactions'],
-                    country_codes,
-                    language
-                }
+                    country_codes: country_codes,
+                    language: language
+                };
+
+                // If an access token is provided, add it to options and remove products
                 if (req.body.access_token) {
-                    options.access_token = req.body.access_token
-                    delete options.products
+                    (options as any).access_token = req.body.access_token;
+                    delete options.products;
                 }
+
+                // Call createLinkToken and handle the response
                 this.client.createLinkToken(options, (err, data) => {
                     if (err) {
-                        logError('Error creating Plaid link token.', err)
+                        logError('Error creating Plaid link token.', err);
+                        return res.status(400).json({ error: err });
                     }
-                    logInfo('Successfully created Plaid link token.')
-                    res.json({ link_token: data.link_token })
-                })
-            })
+                    logInfo('Successfully created Plaid link token.');
+                    res.json({ link_token: data.link_token });
+                });
+            });
 
             app.post('/remove', async (req, res) => {
                 try {

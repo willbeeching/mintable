@@ -42,6 +42,11 @@ export default async () => {
                             title: 'Development',
                             description: 'Real credentials to financial institutions (limited to 100 Items)',
                             value: PlaidEnvironmentType.Development
+                        },
+                        {
+                            title: 'Production',
+                            description: 'Real credentials to financial institutions (limited to 100 Items)',
+                            value: PlaidEnvironmentType.Production
                         }
                     ] as ChoiceWithDescription[],
                     initial: 0

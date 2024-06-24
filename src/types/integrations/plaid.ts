@@ -1,8 +1,10 @@
 import { BaseIntegrationConfig, IntegrationId, IntegrationType } from '../integrations'
 
 export enum PlaidEnvironmentType {
+    Production = 'production',
     Development = 'development',
     Sandbox = 'sandbox'
+
 }
 
 export interface PlaidCredentials {
@@ -28,7 +30,7 @@ export const defaultPlaidConfig: PlaidConfig = {
     id: IntegrationId.Plaid,
     type: IntegrationType.Import,
 
-    environment: PlaidEnvironmentType.Sandbox,
+    environment: PlaidEnvironmentType.Production,
 
     credentials: {
         clientId: '',
